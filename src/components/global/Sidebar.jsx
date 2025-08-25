@@ -35,54 +35,51 @@ const Sidebar = () => {
   const [selected, setSelected] = useState("Dashboard");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  // Track window size for responsiveness
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Collapse sidebar automatically on small screens
   useEffect(() => {
     if (windowWidth < 768) setIsCollapsed(true);
   }, [windowWidth]);
 
-  const sidebarWidth = isCollapsed ? 60 : Math.min(280, windowWidth * 0.7);
+  const sidebarWidth = isCollapsed ? 60 : Math.min(280, windowWidth * 0.8);
 
   return (
- <Box
-  sx={{
-    height: "100vh", // parent container
-    width: isCollapsed ? 60 : "80vw", // expand almost full screen on mobile
-    maxWidth: 280,
-    borderRadius: "20px",
-    overflow: "hidden",
-    backgroundColor: colors.grey[700],
-    display: "flex",
-    flexDirection: "column",
-    "& .pro-sidebar-inner": {
-      borderRadius: "20px",
-      height: "100%",
-      overflowY: "auto", // allow scrolling
-      paddingBottom: "20px", // avoid cut-off
-    },
-    "& .pro-icon-wrapper": { backgroundColor: "transparent !important" },
-    "& .pro-inner-item": {
-      padding: "5px 20px !important",
-      whiteSpace: "normal",
-      wordBreak: "break-word",
-    },
-    "& .pro-inner-item:hover": { color: "#868dfb !important" },
-    "& .pro-menu-item.active": { color: "#6870fa !important" },
-  }}
->
-      <ProSidebar collapsed={isCollapsed} width={sidebarWidth}>
+    <Box
+      sx={{
+        height: "100vh",
+        width: sidebarWidth,
+        borderRadius: "20px",
+        overflow: "hidden",
+        backgroundColor: colors.grey[700],
+        display: "flex",
+        flexDirection: "column",
+        "& .pro-sidebar-inner": {
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          overflowY: "auto",
+          borderRadius: "20px",
+        },
+        "& .pro-icon-wrapper": { backgroundColor: "transparent !important" },
+        "& .pro-inner-item": {
+          padding: "5px 20px !important",
+          whiteSpace: "normal",
+          wordBreak: "break-word",
+        },
+        "& .pro-inner-item:hover": { color: "#868dfb !important" },
+        "& .pro-menu-item.active": { color: "#6870fa !important" },
+      }}
+    >
+      <ProSidebar collapsed={isCollapsed} width="100%">
         <Menu iconShape="square">
-          {/* Logo / collapse button */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-            style={{ margin: "10px 0 20px 0", color: colors.grey[100] }}
+            style={{ margin: "10px 0", color: colors.grey[100] }}
           >
             {!isCollapsed && (
               <Box display="flex" justifyContent="space-between" alignItems="center" ml="15px">
@@ -97,7 +94,7 @@ const Sidebar = () => {
           </MenuItem>
 
           {!isCollapsed && (
-            <Box mb="25px" textAlign="center">
+            <Box textAlign="center">
               <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
                 Michael Scott Catering
               </Typography>
@@ -108,7 +105,6 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            {/* Quick Start */}
             {!isCollapsed && (
               <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
                 Quick Start
@@ -120,7 +116,6 @@ const Sidebar = () => {
             <Item title="Edit Prep List" to="/prep-list" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
             <Item title="Upload New Prep List" to="/new-prep-list" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
 
-            {/* Admin Portal */}
             {!isCollapsed && (
               <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
                 Admin Portal
@@ -128,7 +123,6 @@ const Sidebar = () => {
             )}
             <Item title="Manage (all settings)" to="/bar" icon={<BarChartOutlinedIcon />} selected={selected} setSelected={setSelected} />
 
-            {/* Data Section */}
             {!isCollapsed && (
               <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
                 Data
