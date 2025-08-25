@@ -15,19 +15,28 @@ const Sidebar = () => {
   const toggleDrawer = () => setOpen(!open);
 
   const menuItems = [
-    { section: "Quick Start", items: [
-      { title: "Dashboard", icon: <HomeOutlinedIcon />, to: "/" },
-      { title: "View Short List", icon: <ContactsOutlinedIcon />, to: "/short-list" },
-      { title: "View Progress by Station", icon: <ContactsOutlinedIcon />, to: "/station-progress" },
-      { title: "Edit Prep List", icon: <ContactsOutlinedIcon />, to: "/prep-list" },
-      { title: "Upload New Prep List", icon: <ContactsOutlinedIcon />, to: "/new-prep-list" },
-    ]},
-    { section: "Admin Portal", items: [
-      { title: "Manage (all settings)", icon: <BarChartOutlinedIcon />, to: "/bar" },
-    ]},
-    { section: "Data", items: [
-      { title: "Reports and Analytics", icon: <PieChartOutlineOutlinedIcon />, to: "/reports-analytics" },
-    ]},
+    {
+      section: "Quick Start",
+      items: [
+        { title: "Dashboard", icon: <HomeOutlinedIcon />, to: "/" },
+        { title: "View Short List", icon: <ContactsOutlinedIcon />, to: "/short-list" },
+        { title: "View Progress by Station", icon: <ContactsOutlinedIcon />, to: "/station-progress" },
+        { title: "Edit Prep List", icon: <ContactsOutlinedIcon />, to: "/prep-list" },
+        { title: "Upload New Prep List", icon: <ContactsOutlinedIcon />, to: "/new-prep-list" },
+      ],
+    },
+    {
+      section: "Admin Portal",
+      items: [
+        { title: "Manage (all settings)", icon: <BarChartOutlinedIcon />, to: "/bar" },
+      ],
+    },
+    {
+      section: "Data",
+      items: [
+        { title: "Reports and Analytics", icon: <PieChartOutlineOutlinedIcon />, to: "/reports-analytics" },
+      ],
+    },
   ];
 
   return (
@@ -45,8 +54,11 @@ const Sidebar = () => {
           sx: {
             width: "80vw",
             maxWidth: 280,
-            bgcolor: colors.grey[700],
+            height: "100vh", // FULL HEIGHT
             borderRadius: "20px",
+            bgcolor: colors.grey[700],
+            display: "flex",
+            flexDirection: "column",
             p: 2,
           },
         }}
@@ -61,35 +73,37 @@ const Sidebar = () => {
           </Typography>
         </Box>
 
-        {/* Menu Items */}
-        <List>
-          {menuItems.map((section) => (
-            <Box key={section.section} mb={2}>
-              <Typography variant="subtitle2" color={colors.grey[300]} sx={{ ml: 1, mb: 1 }}>
-                {section.section}
-              </Typography>
-              {section.items.map((item) => (
-                <ListItemButton
-                  key={item.title}
-                  component={Link}
-                  to={item.to}
-                  sx={{ borderRadius: 1, mb: 0.5 }}
-                  onClick={toggleDrawer}
-                >
-                  <ListItemIcon sx={{ color: colors.grey[100], minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.title}
-                    primaryTypographyProps={{
-                      sx: { whiteSpace: "normal", wordBreak: "break-word", color: colors.grey[100] },
-                    }}
-                  />
-                </ListItemButton>
-              ))}
-            </Box>
-          ))}
-        </List>
+        {/* Scrollable Menu Items */}
+        <Box sx={{ overflowY: "auto", flex: 1 }}>
+          <List>
+            {menuItems.map((section) => (
+              <Box key={section.section} mb={2}>
+                <Typography variant="subtitle2" color={colors.grey[300]} sx={{ ml: 1, mb: 1 }}>
+                  {section.section}
+                </Typography>
+                {section.items.map((item) => (
+                  <ListItemButton
+                    key={item.title}
+                    component={Link}
+                    to={item.to}
+                    sx={{ borderRadius: 1, mb: 0.5 }}
+                    onClick={toggleDrawer}
+                  >
+                    <ListItemIcon sx={{ color: colors.grey[100], minWidth: 40 }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.title}
+                      primaryTypographyProps={{
+                        sx: { whiteSpace: "normal", wordBreak: "break-word", color: colors.grey[100] },
+                      }}
+                    />
+                  </ListItemButton>
+                ))}
+              </Box>
+            ))}
+          </List>
+        </Box>
       </Drawer>
     </>
   );
