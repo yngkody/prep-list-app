@@ -1,144 +1,97 @@
-import { useState, useEffect } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
-import "react-pro-sidebar/dist/css/styles.css";
-import { tokens } from "../../theme";
+import { useState } from "react";
+import { Box, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-
-const Item = ({ title, to, icon, selected, setSelected }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  return (
-    <MenuItem
-      active={selected === title}
-      style={{ color: colors.grey[100], overflow: "visible" }}
-      onClick={() => setSelected(title)}
-      icon={icon}
-    >
-      <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
-        <Typography>{title}</Typography>
-      </Box>
-      <Link to={to} />
-    </MenuItem>
-  );
-};
+import { Link } from "react-router-dom";
+import { tokens } from "../../theme";
 
 const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = () => setOpen(!open);
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (windowWidth < 768) setIsCollapsed(true);
-  }, [windowWidth]);
-
-  const sidebarWidth = isCollapsed ? 60 : Math.min(280, windowWidth * 0.8);
+  const menuItems = [
+    { section: "Quick Start", items: [
+      { title: "Dashboard", icon: <HomeOutlinedIcon />, to: "/" },
+      { title: "View Short List", icon: <ContactsOutlinedIcon />, to: "/short-list" },
+      { title: "View Progress by Station", icon: <ContactsOutlinedIcon />, to: "/station-progress" },
+      { title: "Edit Prep List", icon: <ContactsOutlinedIcon />, to: "/prep-list" },
+      { title: "Upload New Prep List", icon: <ContactsOutlinedIcon />, to: "/new-prep-list" },
+    ]},
+    { section: "Admin Portal", items: [
+      { title: "Manage (all settings)", icon: <BarChartOutlinedIcon />, to: "/bar" },
+    ]},
+    { section: "Data", items: [
+      { title: "Reports and Analytics", icon: <PieChartOutlineOutlinedIcon />, to: "/reports-analytics" },
+    ]},
+  ];
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        width: sidebarWidth,
-        borderRadius: "20px",
-        overflow: "hidden",
-        backgroundColor: colors.grey[700],
-        display: "flex",
-        flexDirection: "column",
-        "& .pro-sidebar-inner": {
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          overflowY: "auto",
-          borderRadius: "20px",
-        },
-        "& .pro-icon-wrapper": { backgroundColor: "transparent !important" },
-        "& .pro-inner-item": {
-          padding: "5px 20px !important",
-          whiteSpace: "normal",
-          wordBreak: "break-word",
-        },
-        "& .pro-inner-item:hover": { color: "#868dfb !important" },
-        "& .pro-menu-item.active": { color: "#6870fa !important" },
-      }}
-    >
-      <ProSidebar collapsed={isCollapsed} width="100%">
-        <Menu iconShape="square">
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-            style={{ margin: "10px 0", color: colors.grey[100] }}
-          >
-            {!isCollapsed && (
-              <Box display="flex" justifyContent="space-between" alignItems="center" ml="15px">
-                <Typography variant="h2" color={colors.grey[100]} sx={{ fontFamily: "'Praise', cursive" }}>
-                  Preppery
-                </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                  <MenuOutlinedIcon sx={{ color: colors.grey[100] }} />
-                </IconButton>
-              </Box>
-            )}
-          </MenuItem>
+    <>
+      {/* Menu button */}
+      <IconButton onClick={toggleDrawer} sx={{ m: 1 }}>
+        <MenuOutlinedIcon sx={{ color: colors.grey[100] }} />
+      </IconButton>
 
-          {!isCollapsed && (
-            <Box textAlign="center">
-              <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
-                Michael Scott Catering
+      <Drawer
+        anchor="left"
+        open={open}
+        onClose={toggleDrawer}
+        PaperProps={{
+          sx: {
+            width: "80vw",
+            maxWidth: 280,
+            bgcolor: colors.grey[700],
+            borderRadius: "20px",
+            p: 2,
+          },
+        }}
+      >
+        {/* Header */}
+        <Box textAlign="center" mb={2}>
+          <Typography variant="h4" color={colors.grey[100]} sx={{ fontFamily: "'Praise', cursive" }}>
+            Preppery
+          </Typography>
+          <Typography variant="subtitle1" color={colors.greenAccent[500]}>
+            Admin Portal
+          </Typography>
+        </Box>
+
+        {/* Menu Items */}
+        <List>
+          {menuItems.map((section) => (
+            <Box key={section.section} mb={2}>
+              <Typography variant="subtitle2" color={colors.grey[300]} sx={{ ml: 1, mb: 1 }}>
+                {section.section}
               </Typography>
-              <Typography variant="h5" color={colors.greenAccent[500]}>
-                Admin Portal
-              </Typography>
+              {section.items.map((item) => (
+                <ListItemButton
+                  key={item.title}
+                  component={Link}
+                  to={item.to}
+                  sx={{ borderRadius: 1, mb: 0.5 }}
+                  onClick={toggleDrawer}
+                >
+                  <ListItemIcon sx={{ color: colors.grey[100], minWidth: 40 }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.title}
+                    primaryTypographyProps={{
+                      sx: { whiteSpace: "normal", wordBreak: "break-word", color: colors.grey[100] },
+                    }}
+                  />
+                </ListItemButton>
+              ))}
             </Box>
-          )}
-
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            {!isCollapsed && (
-              <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
-                Quick Start
-              </Typography>
-            )}
-            <Item title="Dashboard" to="/" icon={<HomeOutlinedIcon />} selected={selected} setSelected={setSelected} />
-            <Item title="View Short List" to="/short-list" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
-            <Item title="View Progress by Station" to="/station-progress" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
-            <Item title="Edit Prep List" to="/prep-list" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
-            <Item title="Upload New Prep List" to="/new-prep-list" icon={<ContactsOutlinedIcon />} selected={selected} setSelected={setSelected} />
-
-            {!isCollapsed && (
-              <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
-                Admin Portal
-              </Typography>
-            )}
-            <Item title="Manage (all settings)" to="/bar" icon={<BarChartOutlinedIcon />} selected={selected} setSelected={setSelected} />
-
-            {!isCollapsed && (
-              <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 0" }}>
-                Data
-              </Typography>
-            )}
-            <Item
-              title="Reports and Analytics"
-              to="/reports-analytics"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          </Box>
-        </Menu>
-      </ProSidebar>
-    </Box>
+          ))}
+        </List>
+      </Drawer>
+    </>
   );
 };
 
