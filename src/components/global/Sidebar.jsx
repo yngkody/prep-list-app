@@ -50,27 +50,32 @@ const Sidebar = () => {
   const sidebarWidth = isCollapsed ? 60 : Math.min(280, windowWidth * 0.7);
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        width: sidebarWidth,
-        borderRadius: "20px",
-        overflowY: "auto",
-        backgroundColor: colors.grey[700],
-        "& .pro-sidebar-inner": {
-          borderRadius: "20px",
-          height: "100%",
-        },
-        "& .pro-icon-wrapper": { backgroundColor: "transparent !important" },
-        "& .pro-inner-item": {
-          padding: "5px 20px !important",
-          whiteSpace: "normal",
-          wordBreak: "break-word",
-        },
-        "& .pro-inner-item:hover": { color: "#868dfb !important" },
-        "& .pro-menu-item.active": { color: "#6870fa !important" },
-      }}
-    >
+ <Box
+  sx={{
+    height: "100vh", // parent container
+    width: isCollapsed ? 60 : "80vw", // expand almost full screen on mobile
+    maxWidth: 280,
+    borderRadius: "20px",
+    overflow: "hidden",
+    backgroundColor: colors.grey[700],
+    display: "flex",
+    flexDirection: "column",
+    "& .pro-sidebar-inner": {
+      borderRadius: "20px",
+      height: "100%",
+      overflowY: "auto", // allow scrolling
+      paddingBottom: "20px", // avoid cut-off
+    },
+    "& .pro-icon-wrapper": { backgroundColor: "transparent !important" },
+    "& .pro-inner-item": {
+      padding: "5px 20px !important",
+      whiteSpace: "normal",
+      wordBreak: "break-word",
+    },
+    "& .pro-inner-item:hover": { color: "#868dfb !important" },
+    "& .pro-menu-item.active": { color: "#6870fa !important" },
+  }}
+>
       <ProSidebar collapsed={isCollapsed} width={sidebarWidth}>
         <Menu iconShape="square">
           {/* Logo / collapse button */}
